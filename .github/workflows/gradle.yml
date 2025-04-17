@@ -41,7 +41,6 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git fetch origin APK || git checkout --orphan APK
-        git switch APK
         mkdir -p APK
         cp app/build/outputs/apk/release/youtube_pro_signed.apk APK/
         git add APK/youtube_pro_signed.apk
