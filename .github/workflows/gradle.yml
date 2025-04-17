@@ -36,14 +36,6 @@ jobs:
         name: Apk
         path: "app/build/outputs/apk/release/youtube_pro_signed.apk"
 
-    - name: Add Date to APK Filename
-      run: |
-        set "DATE=%DATE:/=-%"
-        set "TIME=%TIME::=-%"
-        set "TIME=%TIME:,=-%"
-        set "NEW_NAME=app/build/outputs/apk/release/youtube_pro_signed_%DATE%_%TIME%.apk"
-        copy "app\\build\\outputs\\apk\\release\\youtube_pro_signed.apk" "%NEW_NAME%"
-
     - name: Commit APK to APK branch
       run: |
         git config --global user.name "github-actions[bot]"
@@ -51,7 +43,7 @@ jobs:
         git fetch origin APK || git checkout --orphan APK
         git switch APK
         mkdir -p APK
-        copy "%NEW_NAME%" APK/
-        git add APK/*
-        git commit -m "Add signed APK with timestamp"
+        cp app/build/outputs/apk/release/youtube_pro_signed.apk APK/
+        git add APK/youtube_pro_signed.apk
+        git commit -m "Add signed APK"
         git push origin APK
