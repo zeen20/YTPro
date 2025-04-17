@@ -15,9 +15,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # لجلب جميع الفروع
 
       - name: Set up JDK 11
         uses: actions/setup-java@v2
@@ -31,22 +31,22 @@ jobs:
       - name: Sign APK
         run: cmd.exe /c java.exe -jar "signer\\ApkSigner.jar" sign --key "signer\\apkeasytool.pk8" --cert "signer\\apkeasytool.pem" --v4-signing-enabled false --out "%cd%\\app\\build\\outputs\\apk\\release\\youtube_pro_signed.apk" "%cd%\\app\\build\\outputs\\apk\\release\\app-release-unsigned.apk"
 
-      - name: Copy signed APK to APK folder
+      - name: Generate timestamped APK filename
+        id: timestamp
         shell: bash
         run: |
-          if [ ! -f "app/build/outputs/apk/release/youtube_pro_signed.apk" ]; then
-            echo "Signed APK not found!"
-            exit 1
-          fi
+          TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
 
+      - name: Copy APK to APK folder with timestamp
+        run: |
           mkdir -p APK
-          cp "app/build/outputs/apk/release/youtube_pro_signed.apk" "APK/youtube_pro_signed.apk"
+          cp "app/build/outputs/apk/release/youtube_pro_signed.apk" "APK/youtube_pro_signed_${{ steps.timestamp.outputs.timestamp }}.apk"
 
       - name: Commit APK to main branch
-        shell: bash
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add APK/youtube_pro_signed.apk
-          git commit -m "Update signed APK [ci skip]" || echo "No changes to commit"
+          git add APK/
+          git commit -m "Add signed APK with timestamp ${{ steps.timestamp.outputs.timestamp }}"
           git push origin main
