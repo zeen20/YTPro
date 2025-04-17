@@ -29,13 +29,7 @@ jobs:
         run: cmd.exe /c gradlew.bat assembleRelease
 
       - name: Sign APK
-        run: |
-          java -jar "signer\\ApkSigner.jar" sign ^
-            --key "signer\\apkeasytool.pk8" ^
-            --cert "signer\\apkeasytool.pem" ^
-            --v4-signing-enabled false ^
-            --out "%cd%\\app\\build\\outputs\\apk\\release\\youtube_pro_signed.apk" ^
-            "%cd%\\app\\build\\outputs\\apk\\release\\app-release-unsigned.apk"
+        run: cmd.exe /c java.exe -jar "signer\\ApkSigner.jar" sign --key "signer\\apkeasytool.pk8" --cert "signer\\apkeasytool.pem" --v4-signing-enabled false --out "%cd%\\app\\build\\outputs\\apk\\release\\youtube_pro_signed.apk" "%cd%\\app\\build\\outputs\\apk\\release\\app-release-unsigned.apk"
 
       - name: Generate timestamped APK filename
         id: timestamp
