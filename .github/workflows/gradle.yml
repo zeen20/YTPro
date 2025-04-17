@@ -15,6 +15,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # لجلب جميع الفروع
 
     - name: Set up JDK 11
       uses: actions/setup-java@v2
@@ -34,15 +36,14 @@ jobs:
         name: Apk
         path: "app/build/outputs/apk/release/youtube_pro_signed.apk"
 
-    - name: Copy APK to APK folder
+    - name: Commit APK to APK branch
       run: |
-        mkdir APK
-        copy app\\build\\outputs\\apk\\release\\youtube_pro_signed.apk APK\\youtube_pro_signed.apk
-
-    - name: Commit and Push APK
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GTB_TOKEN }}
-        branch: APK
-        directory: .
-        message: "Add signed APK to APK folder"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git fetch origin APK || git checkout --orphan APK
+        git switch APK
+        mkdir -p APK
+        cp app/build/outputs/apk/release/youtube_pro_signed.apk APK/
+        git add APK/youtube_pro_signed.apk
+        git commit -m "Add signed APK"
+        git push origin APK
