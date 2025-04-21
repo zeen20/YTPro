@@ -22,7 +22,7 @@
 			android:supportsPictureInPicture="true"
 		        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
                         android:exported="true"
-			android:screenOrientation="unspecified">
+			android:screenOrientation="sensor">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 				<category android:name="android.intent.category.LAUNCHER"/>
@@ -50,7 +50,7 @@
 			android:supportsPictureInPicture="true"
 			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 			android:exported="true"
-			android:screenOrientation="unspecified">
+			android:screenOrientation="sensor">
 			<intent-filter android:label="@string/dl">
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT" />
